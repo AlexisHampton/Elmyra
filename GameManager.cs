@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
     //how close an Character can be before they collide into something
     [SerializeField] private float maxCollisionDistance = 0.2f;
     [SerializeField] private LayerMask charCollisionLayerMask; //what they can collide with
-    [SerializeField] private List<SkillSO> skillSOs; //all of the skillSOs, since we don't yet have a skill manager class
 
     //getters
     public float MaxCollisionDistance { get { return maxCollisionDistance; } }
@@ -30,15 +29,7 @@ public class GameManager : MonoBehaviour
         NPCManager.Instance.InitNPCs();
     }
 
-    //returns a skillSO for a specified skill Type
-    //if not found, ret null
-    public SkillSO GetSkillSO(SkillType st)
-    {
-        foreach (SkillSO skillSO in skillSOs)
-            if (skillSO.skillType == st)
-                return skillSO;
-        return null;
-    }
+    
 
     
 }

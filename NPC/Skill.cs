@@ -24,10 +24,23 @@ public class Skill
     public Skill(SkillType st)
     {
         skillType = st;
-        skillSO = GameManager.Instance.GetSkillSO(skillType);
+        skillSO = SkillManager.Instance.GetSkillSO(skillType);
         currlevel = 0;
         levelEXP = 0;
         maxEXP = skillSO.skillDefs[0].maxEXP;
+    }
+
+    //constructor that takes a SKillSO and randomizes the attributes
+    public Skill(SkillSO s)
+    {
+        skillType = s.skillType;
+        skillSO = s;
+        currlevel = Random.Range(0, 2);
+        //if currLvl is 0, then there is no previous level, so the lowest EXP is 0
+        int minEXP = currlevel == 0 ? 0 : s.skillDefs[currlevel - 1].maxEXP;
+        //randomize the exp to be between the last levels exp and the current levels exp
+        levelEXP = Random.Range(minEXP, s.skillDefs[currlevel].maxEXP);
+        maxEXP = skillSO.skillDefs[currlevel].maxEXP;
     }
 
     //builds a skill with a skill tyype and current level
@@ -55,26 +68,6 @@ public class Skill
             maxEXP = skillSO.skillDefs[currlevel].maxEXP;
         }
 
-    }
-
-    //the next two functions will likely be in a skillmanager class when I get around to
-    //implementing the skills again
-    
-    //finds a skill in a list of skills and returns it
-    public static Skill FindSkill(List<Skill> skills, Skill skill)
-    {
-        if (skills.Contains(skill))
-            return skills[skills.IndexOf(skill)];
-        return null;
-    }
-     
-    //finds a ReqSkill in a list of skills and returns it
-    public static Skill FindSkill(List<Skill> skills, ReqSkill reqSkill)
-    {
-        foreach (Skill skill in skills)
-            if (skill.skillType == reqSkill.GetSkillType)
-                return skill;
-        return null;
     }
 
     public bool Equals(Skill other)

@@ -28,6 +28,20 @@ public class NPC : Character
         schedule = GOAP.Instance.MakeSchedule(this);
     }
 
+    //inits the npc's traits
+    public void InitTraits()
+    {
+        List<TraitSO> newTraits = TraitManager.Instance.GetTraits();
+        personality = new Personality(newTraits);
+    }
+
+    //inits the npc's skills with randomized values
+    public void InitSkills()
+    {
+        //two for testing
+        skills = SkillManager.Instance.GetSkills(2);
+    }
+
     //gets the npc a job
     public void ObtainJob()
     {

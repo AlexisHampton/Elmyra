@@ -42,8 +42,11 @@ public class NPCManager : MonoBehaviour
         foreach (NPC npc in allNPCs)
         {
             //make them random
+            npc.InitTraits();
+            npc.InitSkills();
             npc.ObtainJob();
             npc.SetSchedule();
+
         }
     }
 }

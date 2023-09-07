@@ -13,6 +13,7 @@ public class Task : MonoBehaviour
     [SerializeField] int energyRestored;
     [SerializeField] Transform location;
     [SerializeField] List<ReqSkill> reqSkills;
+    [SerializeField] List<TraitSO> traits;
 
     //getters
     public string TaskName { get { return taskName; } }
@@ -23,6 +24,7 @@ public class Task : MonoBehaviour
     public Transform Location { get { return location; } }
     public List<ReqSkill> ReqSkills { get { return reqSkills; } }
     public Animation Anim { get { return taskSO.anim; } }
+    public List<TraitSO> Traits { get { return traits; } }
 
     private NPC npc;
 

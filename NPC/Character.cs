@@ -40,6 +40,7 @@ public class Character : MonoBehaviour
     [SerializeField] protected Job job;
     [SerializeField] protected Money money;
     [SerializeField] protected List<Skill> skills;
+    [SerializeField] protected Personality personality;
 
     [Header("Interaction")]
     [SerializeField] private float interactDistance = 2f;
@@ -52,7 +53,7 @@ public class Character : MonoBehaviour
     public Job GetJob { get { return job; } }
     public Money GetMoney { get { return money; } }
     public List<Skill> Skills { get { return skills; } }
-
+    public Personality GetPersonality { get { return personality; } }
 
     //inits all charNeeds with a random value
     private void Awake()

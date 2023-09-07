@@ -146,7 +146,6 @@ public class GOAP : MonoBehaviour
     {
         Schedule schedule = new Schedule(GameTime.Instance.MinutesToNextTime, GameTime.Instance.ScheduleBlocks);
         scheduleMax = schedule.Count;
-        Debug.Log("max:" + scheduleMax + " " + npc.name);
 
         //we have to block in the job first
         Clock currTime = npc.GetJob.GetHours.startTime;
@@ -201,7 +200,7 @@ public class GOAP : MonoBehaviour
             //add possible task if there is a task, our shcedule type matches and no one is there
             if (poss != null && scheduleToType[st] == poss.GetType() && !poss.HasNPC())
             {
-                Debug.Log("Schedule: " + st + " task: " + poss);
+                Debug.Log(npc.name + " Schedule: " + st + " possible task: " + poss);
                 possibleTasks.Add(poss);
             }
         }
@@ -228,6 +227,7 @@ public class GOAP : MonoBehaviour
         Task best = tasks[0];
         float bestScore = taskScores[best];
 
+
         //the best is the one with the smallest value
         foreach (KeyValuePair<Task, float> taskScore in taskScores)
         {
@@ -235,28 +235,17 @@ public class GOAP : MonoBehaviour
             {
                 bestScore = taskScore.Value;
                 best = taskScore.Key;
+                Debug.Log("best: " + best.name + " " + bestScore);
             }
         }
         return best;
     }
 
-    //returns if a given task is valid for a given npc based on their skills and personality
-    public bool IsValid(NPC npc, Task task)
-    {
-        //meet *all* skillreq
-        foreach (ReqSkill reqSkill in task.ReqSkills)
-        {
-            Skill skill = Skill.FindSkill(npc.Skills, reqSkill);
-            if (skill == null || !skill.Equals(reqSkill))
-                return false;
-        }
-        return true;
-    }
-
     //returns a task score for a given task, npc and schedule type
     private float GetTaskScore(NPC npc, ScheduleType st, Task task)
     {
-        //the ones that don't match get the highest values
+        
+        //the ones that don't match the schedule types get the highest values
         switch (st)
         {
             //if the need does not match the lowest need
@@ -287,9 +276,35 @@ public class GOAP : MonoBehaviour
                 break;
         }
 
+        //likewise, those with 0 compatability get the highest value
+        Debug.Log(npc.name + " compat: " + TraitManager.Instance.GetCompatability
+            (npc.GetPersonality.PersonalityTraits, task.Traits) + " " + task.name);
+        if (!TraitManager.Instance.IsCompatible
+            (npc.GetPersonality.PersonalityTraits, task.Traits))
+            return float.MaxValue;
+
+        //check the skill level of the npc and of the task
+        Debug.Log(npc.name + " skill " + IsValid(npc, task) + " taks: " + task.name);
+        if (!IsValid(npc, task))
+            return float.MaxValue;
+
         //otherwise give the tasks actual score
         return task.GetTaskScore(npc.transform.position);
     }
+
+    //returns if a given task is valid for a given npc based on their skills and personality
+    public bool IsValid(NPC npc, Task task)
+    {
+        //meet *all* skillreq
+        foreach (ReqSkill reqSkill in task.ReqSkills)
+        {
+            Skill skill = SkillManager.Instance.FindSkill(npc.Skills, reqSkill);
+            if (skill == null || !skill.Equals(reqSkill))
+                return false;
+        }
+        return true;
+    }
+
 
 
     // ---------------schdule stuff------------------//
